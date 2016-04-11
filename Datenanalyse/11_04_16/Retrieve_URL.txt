@@ -1,0 +1,9 @@
+http://swb.bsz-bw.de/sru/DB=2.1/username=/password=/?query=pica.ppn+%3D+%22100021549%22&version=1.1&operation=searchRetrieve
+
+Produktivsystem 1:
+
+http://swb.bsz-bw.de/sru/DB=2.1/username=/password=/
+
+Produktivsystem 2:
+
+http://swb2.bsz-bw.de/sru/DB=2.1/username=/password=/
