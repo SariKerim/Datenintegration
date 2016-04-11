@@ -2,13 +2,14 @@
 var fs = require('fs');
 var resultStream = fs.createWriteStream('results.txt');
 var resultArray = [];
+var filePath = "C:\Users\sarik\Documents\Datenintegration\Liste_PPN-ExNr_HSHN-libre.csv";
 
 //SKRIPTSTART
 
 resetFiles();
 console.log("Lese Daten...");
 
-fs.readFile('../Liste_PPN-ExNr_HSHN-libre.csv', 'utf-8', function(err, inhalt) {
+fs.readFile(filePath, 'utf-8', function(err, inhalt) {
 	if(err) {
 		return console.log(err);
 	}
