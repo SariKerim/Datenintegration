@@ -1,0 +1,16 @@
+{
+  "name"          : "movie-database",
+  "version"       : "0.0.1",
+  "description"   : "A simple application that collects information about different movies and series using the omdbapi.",
+  "main"          : "server.js",
+  "author"        : "Kerim Sari",
+  "dependencies"  : {
+    "async"           : "^1.5.2",
+    "angular"         : "^1.5.5",
+    "body-parser"     : "^1.4.3",
+    "express"         : "^4.13.4",
+    "method-override" : "^2.1.3",
+    "mongoose"        : "^4.4.12",
+    "morgan"          : "^1.1.1"
+  }
+}
