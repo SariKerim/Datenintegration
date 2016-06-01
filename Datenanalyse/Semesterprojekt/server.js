@@ -67,6 +67,31 @@
       });
     })
 
+    app.get('/showAmountMoviesOfGenre', function(req, res) {
+      var query;
+      // TODO HIER WEITER ARBEITEN!!!!
+      async.series(
+        [
+          function() {
+            query = webcrawler.showAmountMoviesOfGenre();
+          },
+          function() {
+            console.log(query);
+            res.render('pages/moviesOfGenre', query);
+          }
+        ], function(err) {
+          if(err) console.log(err);
+          console.log("Finished!");
+        }
+      )
+
+    })
+
+    app.get('/showMoviesByOriginalLanguage', function(req, res) {
+      var query = webcrawler.showMoviesByOriginalLanguage();
+      res.end();
+    })
+
   // listen (start app with node server.js) ===================================
   app.listen(8080);
   console.log("App listening on port 8080");

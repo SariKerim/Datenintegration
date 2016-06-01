@@ -5,11 +5,21 @@ var mongoose = require('mongoose');
 var themoviedbBaseUrl = 'https://api.themoviedb.org/3/movie/';
 var apiKey = '?api_key=e5846a2f65ecdbaac8752910ca8993a8';
 
+// Das Datenmodell für die Filme definieren. Es genügt die URL unter der die
+// Anfrage für die Daten gestellt wurde und die Information die wir erhalten.
 var Movie = mongoose.model('Movie', {
   RetrieveUrl: String,
   Data: Object
 });
 
+// Ein weiteres Datenmodell um die Statistik der Filme pro Genre abzufragen
+var MovieByGenre = mongoose.model('MovieByGenre', {
+  _id: String,
+  movies: Number
+})
+
+// Da die folgenden Funktionen des webcrawlers exportiert werden sollen, werden
+// sie in einem Objekt abgelegt das später exportiert wird.
 var webcrawler = {
   getAllMovieInfosFor: function getAllMovieInfosFor(startFromId, stopById) {
 
@@ -47,7 +57,37 @@ var webcrawler = {
     return query;
   },
   liveSearchByText: function liveSearchByText(text) {
-
+    // TODO
+  },
+  localSearchByText: function localSearchByText(text) {
+    // TODO
+  },
+  showAmountMoviesOfGenre: function showAmountMoviesOfGenre() {
+    Movie.aggregate(
+      [
+        { $unwind : '$Data.genres' },
+        { $group: {
+                    _id: '$Data.genres.name',
+                    movies: { $sum: 1 }
+                  }
+        }
+      ],
+      function(err, res) {
+        if(err) return console.log(err);
+        //console.log(res);
+        return res;
+      }
+    );
+  },
+  showMoviesByOriginalLanguage: function showMoviesByOriginalLanguage() {
+    Movie.aggregate(
+      { $group: { _id: '$Data.original_language', total_movies: { $sum: 1 } } },
+      function(err, res) {
+        if(err) return console.log(err);
+        console.log(res);
+        return res;
+      }
+    );
   }
 }
 
