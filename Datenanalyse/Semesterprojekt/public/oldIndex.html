@@ -1,0 +1,27 @@
+<!-- index.html -->
+<!doctype html>
+
+<!-- ASSIGN OUR ANGULAR MODULE -->
+<html>
+<head>
+  <title>Movie Database</title>
+</head>
+<body>
+  <h1>Movie Database</h1>
+  <div>
+    <h2>Crawl Datasets:</h2>
+    <form action="http://127.0.0.1:8080/crawlMovieData" method="GET">
+      Start Index: <input type="text" name="startIndex">  <br>
+      Stop Index: <input type="text" name="stopIndex"> <br>
+      <input type="submit" value="Crawl">
+    </form>
+  </div>
+  <div>
+    <h2>Find by ID:</h2>
+    <form action="http://127.0.0.1:8080/findById" method="GET">
+      Search for ID: <input type="text" name="titleId">  <br>
+      <input type="submit" value="Search">
+    </form>
+  </div>
+</body>
+</html>

@@ -1,0 +1,63 @@
+<!-- views/pages/index.ejs -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <% include ../partials/head %>
+</head>
+<body class="container">
+
+    <header>
+        <% include ../partials/header %>
+    </header>
+
+    <main>
+        <div class="jumbotron">
+          <h1>Found title(s):</h1>
+          <div class="container">
+            <h2><%= Data.title %></h2>
+            <table class="table table-hover">
+              <thead>
+                <th>Title</th>
+                <th>Genre</th>
+                <th>Languages</th>
+                <th>imdbID</th>
+                <th>imdbRating</th>
+                <th>imdbVotes</th>
+                <th>Poster</th>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><%= Data.title %></td>
+                  <td>
+                    <% Data.genres.forEach(function(genre) {%>
+                    <%= genre.name %>
+                    <% }); %>
+                  </td>
+                  <td>
+                    <% Data.spoken_languages.forEach(function(language) {%>
+                    <%= language.name %>
+                    <% }); %>
+                  </td>
+                  <td><%= Data.imdbID %></td>
+                  <td><%= Data.imdbRating %></td>
+                  <td><%= Data.imdbVotes %></td>
+                  <td>
+                    <% if(Data.Poster == 'N/A'){ %>
+                      N/A
+                    <% } else { %>
+                      <img src=http://image.tmdb.org/t/p/w500<%= Data.poster_path %>/></td>
+                    <% } %>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+    </main>
+
+    <footer>
+        <% include ../partials/footer %>
+    </footer>
+
+</body>
+</html>

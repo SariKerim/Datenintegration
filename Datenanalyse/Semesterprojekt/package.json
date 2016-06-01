@@ -1,0 +1,19 @@
+{
+  "name": "moviestats",
+  "version": "1.0.0",
+  "description": "A simple web application that uses the OMDB API to collect and present data about movies and series.",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Kerim Sari",
+  "license": "ISC",
+  "dependencies": {
+    "async": "^1.5.2",
+    "body-parser": "^1.14.1",
+    "ejs": "^2.4.1",
+    "express": "^4.13.3",
+    "mongoose": "^4.2.4",
+    "morgan": "^1.7.0"
+  }
+}
