@@ -25,18 +25,7 @@
 
     // application ------------------------------------------------------------
     app.get('/', function(req, res) {
-      //res.sendfile('./public/index.html');
-      var drinks = [
-        { name: 'Bloody Mary', drunkness: 3 },
-        { name: 'Martini', drunkness: 5 },
-        { name: 'Scotch', drunkness: 10 }
-      ];
-      var tagline = "Any code of your own that you haven't looked at for six or more months might as well have been written by someone else.";
-
-      res.render('pages/index', {
-        drinks: drinks,
-        tagline: tagline
-      });
+      res.render('pages/index', {error : ""});
     });
 
     app.get('/about', function(req, res) {
@@ -50,6 +39,8 @@
       var startIndex = parseInt(req.query.startIndex);
       var stopIndex = parseInt(req.query.stopIndex);
 
+      // Sollte es sich bei startIndex oder stopIndex nicht um Zahlenwerte handeln
+      // wird abgebrochen.
       if(isNaN(startIndex) | isNaN(stopIndex)) {
         console.log("Invalid parameters!");
         res.end();
@@ -58,26 +49,15 @@
         res.end();
       }
 
-      // Jetzt das Array mit den URLs vorbereiten.
-      var movieUrls = [];
-
-      for(var i = startIndex; i <= stopIndex; i++) {
-      //  var titleID = 'tt' + '0'.repeat(7 - String(i).length) + String(i);
-      //  var url = 'http://www.omdbapi.com/?i=' + titleID + '&plot=full&r=json'
-        var key = 'e5846a2f65ecdbaac8752910ca8993a8';
-        var url = 'https://api.themoviedb.org/3/movie/' + i + '?api_key=' + key;
-        movieUrls.push(url);
-      }
-
-      // For each movieUrl call fetchMovieData
-    	webcrawler.getAllMovieInfosFor(movieUrls);
+      // Jetzt über den WebCrawler alle angeforderten Filminfos holen lassen
+    	webcrawler.getAllMovieInfosFor(startIndex, stopIndex);
       res.end();
     });
 
-    // Filmeinträge über die ID suchen lassen.
+    // Filmeinträge über die IMDB ID suchen lassen.
     app.get('/findById', function(req, res) {
-      var id = parseInt(req.query.searchId);
-      var query = webcrawler.findByImdbId(id);
+
+      var query = webcrawler.findByImdbId(req.query.imdbId);
 
       query.exec(function(err, movies) {
         if(err)
@@ -85,7 +65,6 @@
         console.log(movies);
         res.render('pages/movie', movies[0]);
       });
-
     })
 
   // listen (start app with node server.js) ===================================

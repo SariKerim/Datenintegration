@@ -15,14 +15,6 @@
         <div class="jumbotron">
             <h1>MovieStats</h1>
             <p>This template was created with EJS!</p>
-            <h2>Variable</h2>
-            <p><%= tagline %></p>
-            <h2>Loop</h2>
-            <ul>
-              <% drinks.forEach(function(drink) {%>
-                <li><%= drink.name %> - <%= drink.drunkness %></li>
-              <% }); %>
-            </ul>
             <h2>Search for Movie</h2>
             <form role="form" action="http://127.0.0.1:8080/crawlMovieData" method="GET">
               <div class="form-group">
@@ -36,12 +28,17 @@
             <br/>
             <form role="form" action="http://127.0.0.1:8080/findById" method="GET">
               <div class="form-group">
-                <label for="titleID">Title ID:</label>
-                <input type="text" class="form-control" name="searchId"></input>
+                <label for="imdbID">IMDB ID:</label>
+                <input type="text" class="form-control" name="imdbId"></input>
               </div>
-              <button type="submit" class="btn btn-default">Submit</button>
+              <button type="submit" class="btn btn-default">Search</button>
             </form>
         </div>
+        <% if (error.length > 0) {%>
+          <div class="alert alert-danger">
+            <strong>Error!</strong> <%= error %>
+          </div>
+        <% }; %>
     </main>
 
     <footer>
