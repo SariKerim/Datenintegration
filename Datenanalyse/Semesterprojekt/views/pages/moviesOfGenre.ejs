@@ -18,6 +18,9 @@
             <tr>
               <th>Genre</th>
               <th>Movie Count</th>
+              <th>Average Rating</th>
+              <th>Average Budget</th>
+              <th>Average Revenue</th>
             </tr>
             <% stats.forEach(function(stat) {%>
               <tr>
@@ -29,6 +32,9 @@
                   <% }; %>
                 </td>
                 <td><%= stat.movies %></td>
+                <td><%= stat.avg_rating.toFixed(2) %></td>
+                <td><%= stat.avg_budget.toFixed(2) %></td>
+                <td><%= stat.avg_revenue.toFixed(2) %></td>
               </tr>
             <% }); %>
           </table>

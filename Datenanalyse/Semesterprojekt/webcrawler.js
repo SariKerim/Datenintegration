@@ -87,9 +87,9 @@ var webcrawler = {
         },
         { $group: {
                     _id: '$Data.genres.name',
-                    //avg_rating: { $avg: '$Data.vote_average' },
-                    //avg_budget: { $avg: '$Data.budget' },
-                    //avg_revenue: { $avg: '$Data.revenue' },
+                    avg_rating: { $avg: '$Data.vote_average' },
+                    avg_budget: { $avg: '$Data.budget' },
+                    avg_revenue: { $avg: '$Data.revenue' },
                     movies: { $sum: 1 }
                   }
         },
@@ -107,12 +107,12 @@ var webcrawler = {
   // Diese Funktion führt eine Aggregation des lokalen Datenbestands durch.
   // Dabei werden Informationen zur Anzahl an Filmen pro originaler Sprachausgabe
   // zurückgegeben, die später verarbeitet werden.
-  showMoviesByOriginalLanguage: function showMoviesByOriginalLanguage(callback) {
+  getMoviesByOriginalLanguage: function getMoviesByOriginalLanguage(callback) {
     Movie.aggregate(
       [
         { $group: {
                     _id: '$Data.original_language',
-                    total_movies: { $sum: 1 }
+                    movies: { $sum: 1 }
                   }
         },
         {

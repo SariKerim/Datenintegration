@@ -86,7 +86,7 @@
     })
 
     app.get('/getMoviesByOriginalLanguage', function(req, res) {
-      var statisics;
+      var statistics;
 
       async.waterfall([
           function(callback) {
@@ -99,7 +99,7 @@
       ], function(err) {
         if(err) console.error(err);
         console.log(statistics);
-        res.render('pages/moviesOfGenre', {stats: statistics});
+        res.render('pages/moviesByLanguage', {stats: statistics});
       });
     })
 
