@@ -21,6 +21,9 @@ var MovieByGenre = mongoose.model('MovieByGenre', {
 // Da die folgenden Funktionen des webcrawlers exportiert werden sollen, werden
 // sie in einem Objekt abgelegt das später exportiert wird.
 var webcrawler = {
+
+  // Funktion zum crawlen von Filmdaten, anhand der IMDB ID. Wird eventuell
+  // auf die ID der TheMovieDB geändert werden.
   getAllMovieInfosFor: function getAllMovieInfosFor(startFromId, stopById) {
 
     // Erst das Array mit den URLs vorbereiten.
@@ -49,6 +52,10 @@ var webcrawler = {
         if (err) console.error(err);
       });
   },
+
+  // Die direkte Suche in der lokalen MongoDB nach einer passenden IMDB
+  // ID, wird eventuell in eine Live-Abfrage umgewandelt um damit
+  // "localSearchByText" abzulösen.
   findByImdbId: function findMovieByImdbId(Id) {
     // Die SuchID um führende Nullen ergänzen.
     var titleId = 'tt' + '0'.repeat(7 - String(Id).length) + String(Id);
@@ -56,36 +63,65 @@ var webcrawler = {
     console.log(query);
     return query;
   },
+
+  // Eine Live-Abfrage über die API nach einem Film oder einer Serie.
   liveSearchByText: function liveSearchByText(text) {
     // TODO
   },
+
+  // Siehe "findByImdbId"
   localSearchByText: function localSearchByText(text) {
     // TODO
   },
-  showAmountMoviesOfGenre: function showAmountMoviesOfGenre() {
+
+  // Diese Funktion führt eine Aggregation des lokalen Datenbestands durch.
+  // Dabei werden Informationen zur Anzahl an Filmen pro Genre zurückgegeben,
+  // die später verarbeitet werden.
+  getAmountMoviesOfGenre: function getAmountMoviesOfGenre(callback) {
     Movie.aggregate(
       [
-        { $unwind : '$Data.genres' },
+        { $unwind : {
+                      path: '$Data.genres',
+                      preserveNullAndEmptyArrays: true
+                    }
+        },
         { $group: {
                     _id: '$Data.genres.name',
+                    //avg_rating: { $avg: '$Data.vote_average' },
+                    //avg_budget: { $avg: '$Data.budget' },
+                    //avg_revenue: { $avg: '$Data.revenue' },
                     movies: { $sum: 1 }
                   }
+        },
+        {
+          $sort:  { movies: 1 }
         }
       ],
       function(err, res) {
         if(err) return console.log(err);
-        //console.log(res);
-        return res;
+        callback(null, res);
       }
     );
   },
-  showMoviesByOriginalLanguage: function showMoviesByOriginalLanguage() {
+
+  // Diese Funktion führt eine Aggregation des lokalen Datenbestands durch.
+  // Dabei werden Informationen zur Anzahl an Filmen pro originaler Sprachausgabe
+  // zurückgegeben, die später verarbeitet werden.
+  showMoviesByOriginalLanguage: function showMoviesByOriginalLanguage(callback) {
     Movie.aggregate(
-      { $group: { _id: '$Data.original_language', total_movies: { $sum: 1 } } },
+      [
+        { $group: {
+                    _id: '$Data.original_language',
+                    total_movies: { $sum: 1 }
+                  }
+        },
+        {
+          $sort: { movies: 1 }
+        }
+      ],
       function(err, res) {
         if(err) return console.log(err);
-        console.log(res);
-        return res;
+        callback(null, res);
       }
     );
   }

@@ -67,29 +67,40 @@
       });
     })
 
-    app.get('/showAmountMoviesOfGenre', function(req, res) {
-      var query;
-      // TODO HIER WEITER ARBEITEN!!!!
-      async.series(
-        [
-          function() {
-            query = webcrawler.showAmountMoviesOfGenre();
-          },
-          function() {
-            console.log(query);
-            res.render('pages/moviesOfGenre', query);
-          }
-        ], function(err) {
-          if(err) console.log(err);
-          console.log("Finished!");
-        }
-      )
+    app.get('/getAmountMoviesOfGenre', function(req, res) {
+      var statistics;
 
+      async.waterfall([
+          function(callback) {
+            webcrawler.getAmountMoviesOfGenre(callback)
+          },
+          function(resultSet, processCallback) {
+            statistics = resultSet;
+            processCallback(null);
+          }
+      ], function(err) {
+        if(err) console.error(err);
+        console.log(statistics);
+        res.render('pages/moviesOfGenre', {stats: statistics});
+      });
     })
 
-    app.get('/showMoviesByOriginalLanguage', function(req, res) {
-      var query = webcrawler.showMoviesByOriginalLanguage();
-      res.end();
+    app.get('/getMoviesByOriginalLanguage', function(req, res) {
+      var statisics;
+
+      async.waterfall([
+          function(callback) {
+            webcrawler.getMoviesByOriginalLanguage(callback)
+          },
+          function(resultSet, processCallback) {
+            statistics = resultSet;
+            processCallback(null);
+          }
+      ], function(err) {
+        if(err) console.error(err);
+        console.log(statistics);
+        res.render('pages/moviesOfGenre', {stats: statistics});
+      });
     })
 
   // listen (start app with node server.js) ===================================

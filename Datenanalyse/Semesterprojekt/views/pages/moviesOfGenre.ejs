@@ -14,9 +14,24 @@
     <main>
         <div class="jumbotron">
           <h1>Movies By Genre</h1>
-          <% _id.forEach(function(id) {%>
-          <%= id %>
-          <% }); %>
+          <table class="table table-hover">
+            <tr>
+              <th>Genre</th>
+              <th>Movie Count</th>
+            </tr>
+            <% stats.forEach(function(stat) {%>
+              <tr>
+                <td>
+                  <% if(stat._id == null) { %>
+                    NULL
+                  <% } else { %>
+                    <%= stat._id %>
+                  <% }; %>
+                </td>
+                <td><%= stat.movies %></td>
+              </tr>
+            <% }); %>
+          </table>
         </div>
     </main>
 
