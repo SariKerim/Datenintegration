@@ -1,0 +1,43 @@
+<!-- views/pages/index.ejs -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <% include ../partials/head %>
+</head>
+<body class="container">
+
+    <header>
+        <% include ../partials/header %>
+    </header>
+
+    <main>
+        <div class="jumbotron">
+          <h1>Movies By Language</h1>
+          <table class="table table-hover">
+            <tr>
+              <th>Language</th>
+              <th>Movie Count</th>
+            </tr>
+            <% stats.forEach(function(stat) {%>
+              <tr>
+                <td>
+                  <% if(stat._id == null) { %>
+                    NULL
+                  <% } else { %>
+                    <%= stat._id %>
+                  <% }; %>
+                </td>
+                <td><%= stat.movies %></td>
+              </tr>
+            <% }); %>
+          </table>
+        </div>
+    </main>
+
+    <footer>
+        <% include ../partials/footer %>
+    </footer>
+
+</body>
+</html>
