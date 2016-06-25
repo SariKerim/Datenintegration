@@ -14,30 +14,57 @@
     <main>
         <div class="jumbotron">
           <h1>Movies By Genre</h1>
-          <table class="table table-hover">
-            <tr>
-              <th>Genre</th>
-              <th>Movie Count</th>
-              <th>Average Rating</th>
-              <th>Average Budget</th>
-              <th>Average Revenue</th>
-            </tr>
-            <% stats.forEach(function(stat) {%>
+          <div id="chart">
+            <!-- Hier wird die C3JS Chart generiert. Dazu werden die erhaltenen
+                 JSON Daten in das von C3JS erwartete Format umgewandelt. Diese
+                 Umwandlung findet hier statt, da die direke Generierung der Daten
+                 durch MongoDB Aggregation nicht die gewünschten Ergebnisse lieferte.
+                 Die einzelnen columns-Einträge wurden mit "Objects" befüllt, die
+                 für die weitere Verarbeitung nicht verwendet werden können. -->
+            <script>
+              var isPie = true;
+              var chart = c3.generate(
+              {
+                bindto: '#chart',
+                data:
+                {
+                  columns:
+                    [
+                      <% stats.forEach(function(stat) { %>
+                        [
+                          <% if(stat._id == null) { %>
+                            'Unbekannt'
+                          <% } else { %>
+                            '<%= stat._id %>'
+                          <% }; %>, <%= stat.movies %>
+                        ],
+                      <% }); %>
+                    ],
+                    type: 'bar'
+                }
+              });
+            </script>
+          </div>
+          <div>
+            <table class="table table-hover">
               <tr>
-                <td>
-                  <% if(stat._id == null) { %>
-                    NULL
-                  <% } else { %>
-                    <%= stat._id %>
-                  <% }; %>
-                </td>
-                <td><%= stat.movies %></td>
-                <td><%= stat.avg_rating.toFixed(2) %></td>
-                <td><%= stat.avg_budget.toFixed(2) %></td>
-                <td><%= stat.avg_revenue.toFixed(2) %></td>
+                <th>Genre</th>
+                <th>Movie Count</th>
               </tr>
-            <% }); %>
-          </table>
+              <% stats.forEach(function(stat) {%>
+                <tr>
+                  <td>
+                    <% if(stat._id == null) { %>
+                      Unbekannt
+                    <% } else { %>
+                      <%= stat._id %>
+                    <% }; %>
+                  </td>
+                  <td><%= stat.movies %></td>
+                </tr>
+              <% }); %>
+            </table>
+          </div>
         </div>
     </main>
 

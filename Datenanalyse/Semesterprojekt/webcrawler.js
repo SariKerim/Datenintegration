@@ -30,8 +30,8 @@ var webcrawler = {
     var movieUrls = [];
 
     for(var i = startFromId; i <= stopById; i++) {
-      var titleId = 'tt' + '0'.repeat(7 - String(i).length) + String(i);
-      var url = themoviedbBaseUrl + titleId + apiKey;
+      //var titleId = 'tt' + '0'.repeat(7 - String(i).length) + String(i);
+      var url = themoviedbBaseUrl + i + apiKey;
       movieUrls.push(url);
     }
 
@@ -87,9 +87,6 @@ var webcrawler = {
         },
         { $group: {
                     _id: '$Data.genres.name',
-                    avg_rating: { $avg: '$Data.vote_average' },
-                    avg_budget: { $avg: '$Data.budget' },
-                    avg_revenue: { $avg: '$Data.revenue' },
                     movies: { $sum: 1 }
                   }
         },
