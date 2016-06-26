@@ -96,7 +96,7 @@ var webcrawler = {
       [
         { $unwind : {
                       path: '$Data.genres',
-                      preserveNullAndEmptyArrays: true
+                      preserveNullAndEmptyArrays: false
                     }
         },
         { $group: {
@@ -149,6 +149,42 @@ var webcrawler = {
         {
           $group: {
                     _id: { $substr : ['$Data.release_date', 0, 4] },
+                    count: { $sum: 1}
+                  }
+        },
+        {
+          $sort: { _id: 1 }
+        }
+      ],
+      function(err, res) {
+        if(err) return console.log(err);
+        callback(null, res);
+      }
+    );
+  },
+
+  getMoviesPerYearAndGenre: function getMoviesPerYearAndGenre(year, callback) {
+    Movie.aggregate(
+      [
+        {
+          $project: {
+                      'Data.release_date' : 1,
+                      'Data.genres' : 1,
+                      year : { $substr : ['$Data.release_date', 0, 4] }
+                    }
+        },
+        {
+          $match: { 'year' : year }
+        },
+        {
+          $unwind: {
+                      path: '$Data.genres',
+                      preserveNullAndEmptyArrays: false
+                   }
+        },
+        {
+          $group: {
+                    _id: '$Data.genres.name',
                     count: { $sum: 1}
                   }
         },

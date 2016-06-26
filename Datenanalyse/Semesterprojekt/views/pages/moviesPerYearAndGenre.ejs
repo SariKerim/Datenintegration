@@ -13,7 +13,7 @@
 
     <main>
         <div class="jumbotron">
-          <h1>Movies per Year</h1>
+          <h1>Movies for the year <%= year %></h1>
           <h2>Diagram</h2>
           <div id="chart">
             <!-- Hier wird die C3JS Chart generiert. Dazu werden die erhaltenen
@@ -59,10 +59,6 @@
                   {
                     grouped: false
                   },
-                  zoom:
-                  {
-                    enabled: true
-                  }
                 }
               );
             </script>
@@ -71,7 +67,7 @@
           <div>
             <table class="table table-hover">
               <tr>
-                <th>Release Year</th>
+                <th>Genre</th>
                 <th>Count</th>
               </tr>
               <% stats.forEach(function(stat) {%>
@@ -80,9 +76,7 @@
                     <% if(stat._id.length == 0) { %>
                       Unbekannt
                     <% } else { %>
-                      <a href="http://127.0.0.1:8080/getMoviesPerYearAndGenre/<%= stat._id %>">
-                        <%= stat._id %>
-                      </a>
+                      <%= stat._id %>
                     <% }; %>
                   </td>
                   <td>

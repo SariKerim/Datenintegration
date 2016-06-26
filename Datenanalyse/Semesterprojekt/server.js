@@ -119,7 +119,25 @@
         if(err) console.error(err);
         console.log(statistics);
         res.render('pages/moviesPerYear', {stats: statistics});
-      })
+      });
+    })
+
+    app.get('/getMoviesPerYearAndGenre/:year', function(req, res) {
+      var statistics;
+
+      async.waterfall([
+        function(callback) {
+          webcrawler.getMoviesPerYearAndGenre(req.params.year, callback)
+        },
+        function(resultSet, processCallback) {
+          statistics = resultSet;
+          processCallback(null);
+        }
+      ], function(err) {
+        if(err) console.error(err);
+        console.log(statistics);
+        res.render('pages/moviesPerYearAndGenre', {stats: statistics, year: req.params.year});
+      });
     })
 
     app.get('/getByQuery/:page', function(req, res) {
