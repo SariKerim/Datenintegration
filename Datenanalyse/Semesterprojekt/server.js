@@ -105,6 +105,10 @@
     })
 
     app.get('/getByQuery/:page', function(req, res) {
+      if(!req.query.queryString) {
+        res.render('pages/404', {errorMessage: 'No valid input given.'});
+      }
+
       var queryResultJSON;
 
       async.waterfall([

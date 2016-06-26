@@ -17,7 +17,7 @@
             <p>This is a simple web application that will list a few different statistics about
               movies, series and whatever is available through the "TheMovieDB API".
             </p>
-            <h2>Search for Movie</h2>
+            <h2>Crawl Movie Data</h2>
             <form role="form" action="http://127.0.0.1:8080/crawlMovieData" method="GET">
               <div class="form-group">
                 <label for="Start Index">Start Index:</label>
@@ -28,6 +28,7 @@
               <button type="submit" class="btn btn-default">Start Crawl</button>
             </form>
             <br/>
+            <h2>Search Movie</h2>
             <form role="form" action="http://127.0.0.1:8080/getByQuery/1" method="GET">
               <div class="form-group">
                 <label for="queryString">Movie Title:</label>
