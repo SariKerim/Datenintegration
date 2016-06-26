@@ -13,7 +13,7 @@
 
     <main>
         <div class="jumbotron">
-          <h1>Movies per Genre</h1>
+          <h1>Movies per Year</h1>
           <h2>Diagram</h2>
           <div id="chart">
             <!-- Hier wird die C3JS Chart generiert. Dazu werden die erhaltenen
@@ -23,59 +23,67 @@
                  Die einzelnen columns-Einträge wurden mit "Objects" befüllt, die
                  für die weitere Verarbeitung nicht verwendet werden können. -->
             <script>
-              var isPie = true;
               var chart = c3.generate(
-              {
-                bindto: '#chart',
-                data:
                 {
-                  columns:
-                    [
-                      <% stats.forEach(function(stat) { %>
-                        [
-                          <% if(stat._id == null) { %>
-                            'Unbekannt'
-                          <% } else { %>
-                            '<%= stat._id %>'
-                          <% }; %>, <%= stat.movies %>
-                        ],
-                      <% }); %>
+                  bindto: '#chart',
+                  data:
+                  {
+                    columns: [
+                          [ 'Count',
+                            <% stats.forEach(function(stat) { %>
+                              <%= stat.count %>,
+                            <% }); %>
+                          ]
                     ],
                     type: 'bar',
                     labels: true
-                },
-                axis:
-                {
-                  x: { show: false },
-                },
-                legend:
-                {
-                  position: 'right'
-                },
-                tooltip:
-                {
-                  grouped: false
+                  },
+                  axis:
+                  {
+                    x:
+                      {
+                        type: 'category',
+                        categories:
+                        [
+                          <% stats.forEach(function(stat) { %>
+                            '<%= stat._id %>',
+                          <% }); %>
+                        ]
+                      }
+                  },
+                  legend:
+                  {
+                    position: 'right'
+                  },
+                  tooltip:
+                  {
+                    grouped: false
+                  },
+                  zoom:
+                  {
+                    enabled: true
+                  }
                 }
-              });
+              );
             </script>
           </div>
           <h2>Tabelle</h2>
           <div>
             <table class="table table-hover">
               <tr>
-                <th>Genre</th>
-                <th>Movie Count</th>
+                <th>Release Year</th>
+                <th>Count</th>
               </tr>
               <% stats.forEach(function(stat) {%>
                 <tr>
                   <td>
-                    <% if(stat._id == null) { %>
+                    <% if(stat._id.length == 0) { %>
                       Unbekannt
                     <% } else { %>
                       <%= stat._id %>
                     <% }; %>
                   </td>
-                  <td><%= stat.movies %></td>
+                  <td><%= stat.count %></td>
                 </tr>
               <% }); %>
             </table>
