@@ -12,12 +12,6 @@ var Movie = mongoose.model('Movie', {
   Data: Object
 });
 
-// Ein weiteres Datenmodell um die Statistik der Filme pro Genre abzufragen
-var MovieByGenre = mongoose.model('MovieByGenre', {
-  _id: String,
-  movies: Number
-})
-
 // Da die folgenden Funktionen des webcrawlers exportiert werden sollen, werden
 // sie in einem Objekt abgelegt das später exportiert wird.
 var webcrawler = {
@@ -134,6 +128,29 @@ var webcrawler = {
         },
         {
           $sort: { movies: 1 }
+        }
+      ],
+      function(err, res) {
+        if(err) return console.log(err);
+        callback(null, res);
+      }
+    );
+  },
+
+  getMoviesPerYear: function getMoviesPerYear(callback) {
+    Movie.aggregate(
+      [
+        {
+          $match: { 'Data.release_date': { $ne: null } }
+        },
+        {
+          $group: {
+                    _id: { $substr : ['$Data.release_date', 0, 4] },
+                    count: { $sum: 1}
+                  }
+        },
+        {
+          $sort: { _id: 1 }
         }
       ],
       function(err, res) {

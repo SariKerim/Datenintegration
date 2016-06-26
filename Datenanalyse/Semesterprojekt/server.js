@@ -104,6 +104,24 @@
       });
     })
 
+    app.get('/getMoviesPerYear', function(req, res) {
+      var statistics;
+
+      async.waterfall([
+        function(callback) {
+          webcrawler.getMoviesPerYear(callback)
+        },
+        function(resultSet, processCallback) {
+          statistics = resultSet;
+          processCallback(null);
+        }
+      ], function(err) {
+        if(err) console.error(err);
+        console.log(statistics);
+        res.render('pages/moviesPerYear', {stats: statistics});
+      })
+    })
+
     app.get('/getByQuery/:page', function(req, res) {
       if(!req.query.queryString) {
         res.render('pages/404', {errorMessage: 'No valid input given.'});
