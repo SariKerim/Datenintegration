@@ -121,13 +121,16 @@ var webcrawler = {
   getMoviesByOriginalLanguage: function getMoviesByOriginalLanguage(callback) {
     Movie.aggregate(
       [
+        {
+          $match: { 'Data.original_language': { $ne: null } }
+        },
         { $group: {
                     _id: '$Data.original_language',
-                    movies: { $sum: 1 }
+                    count: { $sum: 1 }
                   }
         },
         {
-          $sort: { movies: 1 }
+          $sort: { count: 1 }
         }
       ],
       function(err, res) {
