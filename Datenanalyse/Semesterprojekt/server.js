@@ -122,6 +122,24 @@
       });
     });
 
+    app.get('/getMovieById/:id', function(req, res) {
+      var movieInfo;
+
+      async.waterfall([
+        function(callback) {
+          webcrawler.getMovieById(req.params.id, callback);
+        },
+        function(resultSet, processCallback) {
+          movieInfo = resultSet;
+          processCallback(null);
+        }
+      ], function(err) {
+        if(err) console.log(err);
+        console.log(movieInfo);
+        res.render('pages/movieDetail', JSON.parse(movieInfo));
+      });
+    })
+
   // listen (start app with node server.js) ===================================
   app.listen(8080);
   console.log("App listening on port 8080");

@@ -1,0 +1,133 @@
+<!-- views/pages/index.ejs -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <% include ../partials/head %>
+</head>
+<body class="container">
+
+    <header>
+        <% include ../partials/header %>
+    </header>
+
+    <main>
+        <div class="jumbotron">
+          <h1><%= title %></h1>
+          <h2><%= tagline %></h2>
+          <div class="container">
+            <table class="table table-hover">
+              <thead>
+                <th></th>
+                <th></th>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>
+                    <table class="table table-hover">
+                      <tr>
+                        <th>Original Title</th>
+                        <td><%= original_title %></td>
+                      </tr>
+                      <tr>
+                        <th>Genres</th>
+                        <td>
+                          <% genres.forEach(function(genre) {%>
+                          <%= genre.name %>&#32;
+                          <% }); %>
+                        </td>
+                      </tr>
+                      <tr>
+                        <th>Original Language</th>
+                        <td><%= original_language %></td>
+                      </tr>
+                      <tr>
+                        <th>Spoken Languages</th>
+                        <td>
+                          <% spoken_languages.forEach(function(language) {%>
+                          <%= language.name %>&#32;
+                          <% }); %>
+                        </td>
+                      </tr>
+                      <tr>
+                        <th>Release Date</th>
+                        <td><%= release_date %></td>
+                      </tr>
+                      <tr>
+                        <th>Runtime</th>
+                        <td><%= runtime %>min</td>
+                      </tr>
+                      <tr>
+                        <th>Popularity</th>
+                        <td><%= popularity.toFixed(2) %></td>
+                      </tr>
+                      <tr>
+                        <th>Vote Average</th>
+                        <td><%= vote_average.toFixed(2) %></td>
+                      </tr>
+                      <tr>
+                        <th>Nr. of Votes</th>
+                        <td><%= vote_count %></td>
+                      </tr>
+                      <tr>
+                        <th>Overview</th>
+                        <td><%= overview %></td>
+                      </tr>
+                      <tr>
+                        <th>Homepage</th>
+                        <td>
+                          <% if(homepage == 'N/A' | homepage == null) { %>
+                            N/A
+                          <% } else { %>
+                            <a href=<%= homepage %>><%= homepage %></a>
+                          <% } %>
+                        </td>
+                      </tr>
+                      <tr>
+                        <th>Production Countries</th>
+                        <td>
+                          <% production_countries.forEach(function(country) {%>
+                          <%= country.name %></br>
+                          <% }); %>
+                        </td>
+                      </tr>
+                      <tr>
+                        <th>Production Companies</th>
+                        <td>
+                          <% production_companies.forEach(function(company) {%>
+                          <%= company.name %></br>
+                          <% }); %>
+                        </td>
+                      </tr>
+                    </table>
+                  </td>
+                  <td>
+                    <% if(poster_path == 'N/A' | poster_path == null){ %>
+                      N/A
+                    <% } else { %>
+                      <img src=http://image.tmdb.org/t/p/w500<%= poster_path %>/>
+                    <% } %>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <script type="text/javascript">
+
+          /* Diese Funktion dient dazu die Details-Seite eines Films zu laden
+             wenn auf den Detail-Button geklickt wurde. Die ID erhält er über
+             den aufrufenden Button selbst. */
+          function getDetails(movieID) {
+            location.href = "http://127.0.0.1:8080/getMovieById/" + movieID;
+          }
+        </script>
+    </main>
+
+    <footer>
+        <% include ../partials/footer %>
+    </footer>
+
+</body>
+</html>

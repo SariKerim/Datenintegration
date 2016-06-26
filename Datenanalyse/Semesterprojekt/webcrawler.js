@@ -56,12 +56,23 @@ var webcrawler = {
   // Die direkte Suche in der lokalen MongoDB nach einer passenden IMDB
   // ID, wird eventuell in eine Live-Abfrage umgewandelt um damit
   // "localSearchByText" abzulösen.
-  findByImdbId: function findMovieByImdbId(Id) {
-    // Die SuchID um führende Nullen ergänzen.
-    var titleId = 'tt' + '0'.repeat(7 - String(Id).length) + String(Id);
-    var query = Movie.find({'Data.imdb_id': titleId}).lean();
-    console.log(query);
-    return query;
+  getMovieById: function getMovieById(id, callback) {
+    var req = http.get(themoviedbBaseUrl + 'movie/' + id + '?' + apiKey,
+      function(response) {
+        // Continuously update stream with data
+        var data = '';
+        response.on('data', function(d) {
+          data += d;
+        });
+        response.on('end', function() {
+          console.log(themoviedbBaseUrl + 'movie/' + id + '?' + apiKey);
+          console.log(data);
+          callback(null, data);
+        });
+      });
+      req.on('error', function(e) {
+        console.error('ERROR: ' + e.message);
+      });
   },
 
   // Eine Live-Abfrage über die API nach einem Film oder einer Serie.

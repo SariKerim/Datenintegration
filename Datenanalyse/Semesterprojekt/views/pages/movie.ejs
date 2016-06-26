@@ -29,14 +29,6 @@
                         <h2><%= movie.title %></h2>
                       </tr>
                       <tr>
-                        <th>Genres</th>
-                        <td>
-                          <% movie.genre_ids.forEach(function(genre) {%>
-                          <%= genre %>
-                          <% }); %>
-                        </td>
-                      </tr>
-                      <tr>
                         <th>Language</th>
                         <td><%= movie.original_language %></td>
                       </tr>
