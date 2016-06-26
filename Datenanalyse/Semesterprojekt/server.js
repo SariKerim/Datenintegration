@@ -5,6 +5,7 @@
   var mongoose        = require('mongoose');        // mongoose for mongodb
   var morgan          = require('morgan');          // log requests to the console (express4)
   var bodyParser      = require('body-parser');     // pull information from HTML POST (express4)
+  var http            = require('http');
   var async           = require('async');
   var db              = require('./database.js');
   var webcrawler      = require('./webcrawler.js');
@@ -102,6 +103,24 @@
         res.render('pages/moviesByLanguage', {stats: statistics});
       });
     })
+
+    app.get('/getByQuery/:page', function(req, res) {
+      var queryResultJSON;
+
+      async.waterfall([
+        function(callback) {
+          webcrawler.liveSearchByText(req.query.queryString, req.params.page, callback);
+        },
+        function(resultSet, processCallback) {
+          queryResultJSON = resultSet;
+          processCallback(null);
+        }
+      ], function(err) {
+        if(err) console.log(err);
+        //console.log(queryResultJSON);
+        res.render('pages/movie', JSON.parse(queryResultJSON));
+      });
+    });
 
   // listen (start app with node server.js) ===================================
   app.listen(8080);

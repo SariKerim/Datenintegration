@@ -13,46 +13,139 @@
 
     <main>
         <div class="jumbotron">
-          <h1>Found title(s):</h1>
+          <h1>Found title(s): <%= total_results %></h1>
           <div class="container">
-            <h2><%= Data.title %></h2>
             <table class="table table-hover">
               <thead>
-                <th>Title</th>
-                <th>Genre</th>
-                <th>Languages</th>
-                <th>imdbID</th>
-                <th>imdbRating</th>
-                <th>imdbVotes</th>
-                <th>Poster</th>
+                <th></th>
+                <th></th>
               </thead>
               <tbody>
+                <% results.forEach(function(movie) { %>
                 <tr>
-                  <td><%= Data.title %></td>
                   <td>
-                    <% Data.genres.forEach(function(genre) {%>
-                    <%= genre.name %>
-                    <% }); %>
+                    <table class="table table-hover">
+                      <tr>
+                        <h2><%= movie.title %></h2>
+                      </tr>
+                      <tr>
+                        <th>Genres</th>
+                        <td>
+                          <% movie.genre_ids.forEach(function(genre) {%>
+                          <%= genre %>
+                          <% }); %>
+                        </td>
+                      </tr>
+                      <tr>
+                        <th>Language</th>
+                        <td><%= movie.original_language %></td>
+                      </tr>
+                      <tr>
+                        <th>Release Date</th>
+                        <td><%= movie.release_date %></td>
+                      </tr>
+                      <tr>
+                        <th>The Movie DB ID</th>
+                        <td><%= movie.id %></td>
+                      </tr>
+                      <tr>
+                        <th>Popularity</th>
+                        <td><%= movie.popularity.toFixed(2) %></td>
+                      </tr>
+                      <tr>
+                        <th>Nr. of Votes</th>
+                        <td><%= movie.vote_count %></td>
+                      </tr>
+                      <tr>
+                        <th>Overview</th>
+                        <td><%= movie.overview %></td>
+                      </tr>
+                      <tr>
+                        <th>
+                          <!-- Die erstellten Buttons für die Detailansicht erhalten als ID die
+                              Film-ID auf die sie referenzieren. Der "onclick"-Event erhält anschließend
+                              die Film-ID über eine Referenzierung des Buttons auf seine eigene ID. -->
+                          <button id="<%= movie.id %>" type="submit" class="btn btn-default" onclick="getDetails(this.id)">Details</button>
+                        </th>
+                        <td></td>
+                      </tr>
+                    </table>
                   </td>
                   <td>
-                    <% Data.spoken_languages.forEach(function(language) {%>
-                    <%= language.name %>
-                    <% }); %>
-                  </td>
-                  <td><%= Data.imdbID %></td>
-                  <td><%= Data.imdbRating %></td>
-                  <td><%= Data.imdbVotes %></td>
-                  <td>
-                    <% if(Data.Poster == 'N/A'){ %>
+                    <% if(movie.poster_path == 'N/A' | movie.poster_path == null){ %>
                       N/A
                     <% } else { %>
-                      <img src=http://image.tmdb.org/t/p/w500<%= Data.poster_path %>/></td>
+                      <img src=http://image.tmdb.org/t/p/w500<%= movie.poster_path %>/>
                     <% } %>
+                  </td>
                 </tr>
+                <% }); %>
               </tbody>
+
             </table>
           </div>
+          <div class="container">
+            <span>
+              <button id="previousButton" type="submit" class="btn btn-default">Previous</button>
+              <span>Page: <%= page %> of <%= total_pages %></span>
+              <button id="nextButton" type="submit" class="btn btn-default">Next</button>
+            </span>
+          </div>
         </div>
+
+        <!-- Der folgende Part enthält die javascript Logik für die Seitennavigation.
+             Aus Ermangelung einer eleganteren Lösung wird die Folge-URL durch aufsplitten
+             der aktuellen Seiten-URL und erneuter Zusammensetzung ermittelt.
+             Dabei wird der "page" Parameter aus der diesem Template zugrunde liegenden
+             Daten-JSON ermittelt. Wichtig ist ebenfalls der "total_pages" Parameter
+             der in der Daten-JSON hinterlegt ist. -->
+        <script type="text/javascript">
+          document.getElementById("nextButton").onclick = function () {
+            var currentUrl = document.URL;
+            var splitUrl = currentUrl.split("/");
+            var param = splitUrl[4].split("?");
+            var newUrl =
+              'http://' +
+              splitUrl[2] +
+              '/' +
+              splitUrl[3] +
+              '/' +
+              <% if(page >= total_pages) { %>
+                <%= total_pages %>
+              <% } else { %>
+                <%= page+1 %>
+              <% } %> +
+              '?' +
+              param[1];
+            location.href = newUrl;
+          };
+
+          document.getElementById("previousButton").onclick = function () {
+            var currentUrl = document.URL;
+            var splitUrl = currentUrl.split("/");
+            var param = splitUrl[4].split("?");
+            var newUrl =
+              'http://' +
+              splitUrl[2] +
+              '/' +
+              splitUrl[3] +
+              '/' +
+              <% if(page <= 1) { %>
+                <%= page %>
+              <% } else { %>
+                <%= page-1 %>
+              <% } %> +
+              '?' + param[1];
+            location.href = newUrl;
+          };
+
+          /* Diese Funktion dient dazu die Details-Seite eines Films zu laden
+             wenn auf den Detail-Button geklickt wurde. Die ID erhält er über
+             den aufrufenden Button selbst. */
+          function getDetails(movieID) {
+            location.href = "http://127.0.0.1:8080/getMovieById/" + movieID;
+          }
+        </script>
     </main>
 
     <footer>

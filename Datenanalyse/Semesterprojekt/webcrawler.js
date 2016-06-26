@@ -1,9 +1,9 @@
-var http = require('https');
+var http = require('http');
 var async = require('async');
 var mongoose = require('mongoose');
 
-var themoviedbBaseUrl = 'https://api.themoviedb.org/3/movie/';
-var apiKey = '?api_key=e5846a2f65ecdbaac8752910ca8993a8';
+  var themoviedbBaseUrl = 'http://api.themoviedb.org/3/';
+var apiKey = 'api_key=e5846a2f65ecdbaac8752910ca8993a8';
 
 // Das Datenmodell für die Filme definieren. Es genügt die URL unter der die
 // Anfrage für die Daten gestellt wurde und die Information die wir erhalten.
@@ -31,7 +31,7 @@ var webcrawler = {
 
     for(var i = startFromId; i <= stopById; i++) {
       //var titleId = 'tt' + '0'.repeat(7 - String(i).length) + String(i);
-      var url = themoviedbBaseUrl + i + apiKey;
+      var url = themoviedbBaseUrl + 'movie/' + i + '?' + apiKey;
       movieUrls.push(url);
     }
 
@@ -65,13 +65,22 @@ var webcrawler = {
   },
 
   // Eine Live-Abfrage über die API nach einem Film oder einer Serie.
-  liveSearchByText: function liveSearchByText(text) {
-    // TODO
-  },
-
-  // Siehe "findByImdbId"
-  localSearchByText: function localSearchByText(text) {
-    // TODO
+  liveSearchByText: function liveSearchByText(text, page, callback) {
+    var req = http.get(themoviedbBaseUrl + 'search/movie?query=' + text + '&page=' + page + '&' + apiKey,
+      function(response) {
+        // Continuously update stream with data
+        var data = '';
+        response.on('data', function(d) {
+          data += d;
+        });
+        response.on('end', function() {
+          console.log(themoviedbBaseUrl + 'search/movie?query=' + text + '&page=' + page + '&' + apiKey);
+          callback(null, data);
+        });
+      });
+      req.on('error', function(e) {
+        console.error('ERROR: ' + e.message);
+      });
   },
 
   // Diese Funktion führt eine Aggregation des lokalen Datenbestands durch.
