@@ -14,8 +14,12 @@
     <main>
         <div class="jumbotron">
             <h1>MovieStats</h1>
-            <p>This is a simple web application that will list a few different statistics about
-              movies, series and whatever is available through the "TheMovieDB API".
+            <p>
+              This is a simple web application that will list a few different statistics about
+              movies through the <a href="https://www.themoviedb.org/">The MovieDB API</a>.
+            </br>
+              To crawl movie data for the local MongoDB, just add the start and stop index
+              of your crawl. It will be crawled for the corresponding The MovieDB IDs.
             </p>
             <h2>Crawl Movie Data</h2>
             <form role="form" action="http://127.0.0.1:8080/crawlMovieData" method="GET">
@@ -28,6 +32,11 @@
               <button type="submit" class="btn btn-default">Start Crawl</button>
             </form>
             <br/>
+            <p>
+              You can also do a live search through the "TheMovieDB API". You'll receive
+              all matching movies to your query. 20 Movies will be listed per page, with
+              the possibility to also load additional movie details.
+            </p>
             <h2>Search Movie</h2>
             <form role="form" action="http://127.0.0.1:8080/getByQuery/1" method="GET">
               <div class="form-group">

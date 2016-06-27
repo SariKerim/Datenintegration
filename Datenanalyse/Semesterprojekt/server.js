@@ -180,6 +180,28 @@
       });
     })
 
+    app.get('/getPopularMovies/:page', function(req, res) {
+      if(!req.params.page | req.params.page <= 0) {
+        res.render('pages/404', {errorMessage: 'The requested page is not valid.'});
+      }
+
+      var queryResultJSON;
+
+      async.waterfall([
+        function(callback) {
+          webcrawler.getPopularMovies(req.params.page, callback);
+        },
+        function(resultSet, processCallback) {
+          queryResultJSON = resultSet;
+          processCallback(null);
+        }
+      ], function(err) {
+        if(err) console.log(err);
+        //console.log(queryResultJSON);
+        res.render('pages/movie', JSON.parse(queryResultJSON));
+      });
+    });
+
     app.get('/getAveragesOfAllMovies', function(req, res) {
       var statistics;
 
