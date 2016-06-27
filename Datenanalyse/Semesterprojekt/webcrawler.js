@@ -106,6 +106,42 @@ var webcrawler = {
       });
   },
 
+  getTopRatedMovies: function getTopRatedMovies(page, callback) {
+    var req = http.get(themoviedbBaseUrl + 'movie/top_rated?page=' + page + '&' + apiKey,
+      function(response) {
+        // Continuously update stream with data
+        var data = '';
+        response.on('data', function(d) {
+          data += d;
+        });
+        response.on('end', function() {
+          console.log(themoviedbBaseUrl + 'movie/top_rated?page=' + page + '&' + apiKey);
+          callback(null, data);
+        });
+      });
+      req.on('error', function(e) {
+        console.error('ERROR: ' + e.message);
+      });
+  },
+
+  getUpcomingMovies: function getUpcomingMovies(page, callback) {
+    var req = http.get(themoviedbBaseUrl + 'movie/upcoming?page=' + page + '&' + apiKey,
+      function(response) {
+        // Continuously update stream with data
+        var data = '';
+        response.on('data', function(d) {
+          data += d;
+        });
+        response.on('end', function() {
+          console.log(themoviedbBaseUrl + 'movie/upcoming?page=' + page + '&' + apiKey);
+          callback(null, data);
+        });
+      });
+      req.on('error', function(e) {
+        console.error('ERROR: ' + e.message);
+      });
+  },
+
   // Diese Funktion führt eine Aggregation des lokalen Datenbestands durch.
   // Dabei werden Informationen zur Anzahl an Filmen pro Genre zurückgegeben,
   // die später verarbeitet werden.

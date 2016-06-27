@@ -5,14 +5,21 @@
     <div class="navbar-header">
       <a class="navbar-brand" href="/">
         <span class="glyphicon glyphicon glyphicon-sunglasses"></span>
-        MovieStats V 0.8
+        MovieStats V 1.0
       </a>
     </div>
     <!-- Collect the nav links, forms, and other content for toggling -->
     <div class="collapse navbar-collapse">
       <ul class="nav navbar-nav">
-          <li><a href="/">Home</a></li>
-          <li><a href="/getPopularMovies/1">Popular Movies</a></li>
+          <li class="active"><a href="/">Home</a></li>
+          <li class="dropdown">
+            <a class="dropdown-toggle" data-toggle="dropdown" href="/">Live-Data<span class="caret"></span></a>
+            <ul class="dropdown-menu">
+              <li><a href="/getPopularMovies/1">Popular Movies</a></li>
+              <li><a href="/getTopRatedMovies/1">Top Rated Movies</a></li>
+              <li><a href="/getUpcomingMovies/1">Upcoming Movies</a></li>
+            </ul>
+          </li>
           <li><a href="/getAmountMoviesOfGenre">Movies per Genre</a></li>
           <li><a href="/getMoviesByOriginalLanguage">Movies per org. Language</a></li>
           <li><a href="/getMoviesPerYear">Movies per Year</a></li>
