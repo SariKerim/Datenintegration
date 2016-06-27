@@ -180,6 +180,24 @@
       });
     })
 
+    app.get('/getAveragesOfAllMovies', function(req, res) {
+      var statistics;
+
+      async.waterfall([
+        function(callback) {
+          webcrawler.getAveragesOfAllMovies(callback);
+        },
+        function(resultSet, processCallback) {
+          statistics = resultSet;
+          processCallback(null);
+        }
+      ], function(err) {
+        if(err) console.log(err);
+        console.log(statistics);
+        res.render('pages/averagesOfAllMovies', {stats: statistics});
+      });
+    })
+
   // listen (start app with node server.js) ===================================
   app.listen(8080);
   console.log("App listening on port 8080");

@@ -197,6 +197,56 @@ var webcrawler = {
         callback(null, res);
       }
     );
+  },
+
+  getAveragesOfAllMovies: function getAveragesOfAllMovies(callback) {
+    Movie.aggregate(
+      [
+        {
+          $project: {
+                      'Data.genres' : 1,
+                      'Data.vote_count' : 1,
+                      'Data.vote_average' : 1,
+                      'Data.runtime': 1,
+                      'Data.adult': { $cond: ['$Data.adult', 1, 0] }
+                    }
+        },
+        {
+          $unwind: {
+                      path: '$Data.genres',
+                      preserveNullAndEmptyArrays: false
+                    }
+        },
+        {
+          $group: {
+                    _id: '$Data.genres.name',
+                    avgRating: { $avg: '$Data.vote_average' },
+                    avgVoteCount: { $avg: '$Data.vote_count' },
+                    avgRuntime: { $avg: '$Data.runtime' },
+                    totalMovieCount: { $sum: 1},
+                    totalAdultMovies: { $sum: '$Data.adult'},
+                  }
+        },
+        {
+          $project: {
+                      _id: 1,
+                      avgRating: 1,
+                      avgVoteCount: 1,
+                      avgRuntime: 1,
+                      totalMovieCount: 1,
+                      totalAdultMovies: 1,
+                      avgIsAdult: { $divide: ['$totalAdultMovies', '$totalMovieCount'] }
+                    }
+        },
+        {
+          $sort: { _id: 1 }
+        }
+      ],
+      function(err, res) {
+        if(err) return console.log(err);
+        callback(null, res);
+      }
+    );
   }
 }
 

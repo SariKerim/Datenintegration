@@ -1,0 +1,253 @@
+<!-- views/pages/index.ejs -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <% include ../partials/head %>
+</head>
+<body class="container">
+
+    <header>
+        <% include ../partials/header %>
+    </header>
+
+    <main>
+        <div class="jumbotron">
+          <h1>Averages of all Movies</h1>
+<!-------------------------------------------------------------------------------------->
+<!-------------------------------Average Rating per Genre Stats------------------------->
+<!-------------------------------------------------------------------------------------->
+          <h2>Average Rating per Genre</h2>
+          <div id="avgRating_chart">
+            <!-- Hier wird die C3JS Chart generiert. Dazu werden die erhaltenen
+                 JSON Daten in das von C3JS erwartete Format umgewandelt. Diese
+                 Umwandlung findet hier statt, da die direke Generierung der Daten
+                 durch MongoDB Aggregation nicht die gewünschten Ergebnisse lieferte.
+                 Die einzelnen columns-Einträge wurden mit "Objects" befüllt, die
+                 für die weitere Verarbeitung nicht verwendet werden können. -->
+            <script>
+              var chart = c3.generate(
+                {
+                  bindto: '#avgRating_chart',
+                  data:
+                  {
+                    rows: [
+                          [
+                            <% stats.forEach(function(stat) { %>
+                              '<%= stat._id %>',
+                            <% }); %>
+                          ],
+                          [
+                            <% stats.forEach(function(stat) { %>
+                              '<%= stat.avgRating.toFixed(2) %>',
+                            <% }); %>
+                          ]
+                    ],
+                    type: 'bar',
+                    labels: true
+                  },
+                  axis:
+                  {
+                    x:
+                      {
+                        type: 'category',
+                        categories:
+                        [ 'Genre' ]
+                      }
+                  },
+                  legend:
+                  {
+                    position: 'right'
+                  },
+                  tooltip:
+                  {
+                    grouped: false
+                  },
+                }
+              );
+            </script>
+          </div>
+<!-------------------------------------------------------------------------------------->
+<!-------------------------------Average Vote Count Stats------------------------------->
+<!-------------------------------------------------------------------------------------->
+          <h2>Average Vote Count per Genre</h2>
+          <div id="avgVoteCount_chart">
+            <!-- Hier wird die C3JS Chart generiert. Dazu werden die erhaltenen
+                 JSON Daten in das von C3JS erwartete Format umgewandelt. Diese
+                 Umwandlung findet hier statt, da die direke Generierung der Daten
+                 durch MongoDB Aggregation nicht die gewünschten Ergebnisse lieferte.
+                 Die einzelnen columns-Einträge wurden mit "Objects" befüllt, die
+                 für die weitere Verarbeitung nicht verwendet werden können. -->
+            <script>
+              var chart = c3.generate(
+                {
+                  bindto: '#avgVoteCount_chart',
+                  data:
+                  {
+                    rows: [
+                          [
+                            <% stats.forEach(function(stat) { %>
+                              '<%= stat._id %>',
+                            <% }); %>
+                          ],
+                          [
+                            <% stats.forEach(function(stat) { %>
+                              '<%= stat.avgVoteCount.toFixed(2) %>',
+                            <% }); %>
+                          ]
+                    ],
+                    type: 'bar',
+                    labels: true
+                  },
+                  axis:
+                  {
+                    x:
+                      {
+                        type: 'category',
+                        categories:
+                        [ 'Genre' ]
+                      }
+                  },
+                  legend:
+                  {
+                    position: 'right'
+                  },
+                  tooltip:
+                  {
+                    grouped: false
+                  },
+                }
+              );
+            </script>
+          </div>
+<!-------------------------------------------------------------------------------------->
+<!-------------------------------Average Runtime Stats---------------------------------->
+<!-------------------------------------------------------------------------------------->
+          <h2>Average Runtime per Genre (min)</h2>
+          <div id="avgRuntime_chart">
+            <!-- Hier wird die C3JS Chart generiert. Dazu werden die erhaltenen
+                 JSON Daten in das von C3JS erwartete Format umgewandelt. Diese
+                 Umwandlung findet hier statt, da die direke Generierung der Daten
+                 durch MongoDB Aggregation nicht die gewünschten Ergebnisse lieferte.
+                 Die einzelnen columns-Einträge wurden mit "Objects" befüllt, die
+                 für die weitere Verarbeitung nicht verwendet werden können. -->
+            <script>
+              var chart = c3.generate(
+                {
+                  bindto: '#avgRuntime_chart',
+                  data:
+                  {
+                    rows: [
+                          [
+                            <% stats.forEach(function(stat) { %>
+                              '<%= stat._id %>',
+                            <% }); %>
+                          ],
+                          [
+                            <% stats.forEach(function(stat) { %>
+                              '<%= stat.avgRuntime.toFixed(2) %>',
+                            <% }); %>
+                          ]
+                    ],
+                    type: 'bar',
+                    labels: true
+                  },
+                  axis:
+                  {
+                    x:
+                      {
+                        type: 'category',
+                        categories:
+                        [ 'Genre' ]
+                      }
+                  },
+                  legend:
+                  {
+                    position: 'right'
+                  },
+                  tooltip:
+                  {
+                    grouped: false
+                  },
+                }
+              );
+            </script>
+          </div>
+<!-------------------------------------------------------------------------------------->
+<!-------------------------------Table Movie Base.....---------------------------------->
+<!-------------------------------------------------------------------------------------->
+          <h2>Table Movie Base</h2>
+          <div>
+            <table class="table table-hover">
+              <tr>
+                <th>Genre</th>
+                <th>Count</th>
+                <th>Adult</th>
+              </tr>
+              <% stats.forEach(function(stat) {%>
+                <tr>
+                  <td>
+                    <% if(stat._id.length == 0) { %>
+                      Unbekannt
+                    <% } else { %>
+                      <%= stat._id %>
+                    <% }; %>
+                  </td>
+                  <td>
+                    <%= stat.totalMovieCount %>
+                  </td>
+                  <td>
+                    <div id="adultChart_<%= stat._id %>">
+                      <script>
+                        var chart = c3.generate(
+                          {
+                            bindto: '#adultChart_<%= stat._id %>',
+                            size:
+                            {
+                              height: 300,
+                              width: 300
+                            },
+                            data:
+                            {
+                              columns: [
+                                    [ 'Adult', <%= stat.avgIsAdult %> ],
+                                    [ 'Non-Adult', <%= 1-stat.avgIsAdult %> ]
+                              ],
+                              type: 'pie',
+                              labels: true
+                            },
+                            axis:
+                            {
+                              x:
+                                {
+                                  type: 'category',
+                                  categories:
+                                  [ 'Genre' ]
+                                }
+                            },
+                            legend:
+                            {
+                              position: 'right'
+                            },
+                            tooltip:
+                            {
+                              grouped: false
+                            },
+                          }
+                        );
+                      </script>
+                    </div>
+                  </td>
+                </tr>
+              <% }); %>
+            </table>
+          </div>
+        </div>
+    </main>
+
+    <footer>
+        <% include ../partials/footer %>
+    </footer>
+
+</body>
+</html>
